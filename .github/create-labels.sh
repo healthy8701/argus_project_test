@@ -8,7 +8,7 @@
 
 set -e
 
-REPO="Delos-Matrix/Argus"
+REPO="healthy8701/argus_project_test"
 
 echo "=== Argus Label 初始化開始 ==="
 echo ""
@@ -51,7 +51,7 @@ create_label() {
 }
 
 echo "Step 2：建立 type: 系列 label"
-create_label "type: bug"       "d93f0b" "臭蟲回報"
+create_label "type: bug"       "d93f0b" "BUG 回報"
 create_label "type: feature"   "0075ca" "新功能需求"
 create_label "type: task"      "5319e7" "開發任務（重構、CI/CD 等）"
 create_label "type: tech-debt" "e4e669" "技術債"
@@ -88,7 +88,7 @@ create_label "page: settings"  "e6b8a2" "設定頁"
 echo ""
 
 # ──────────────────────────────────────────
-# Step 3：刪除已被取代的舊 label
+# Step 7：刪除已被取代的舊 label
 # ──────────────────────────────────────────
 delete_label() {
   local name="$1"

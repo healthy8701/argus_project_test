@@ -1,7 +1,7 @@
 name: BUG 回報
 description: 回報 App 發生的錯誤或異常行為
 title: "[BUG] "
-labels: [bug]
+labels: ["type: bug"]
 assignees: []
 body:
   - type: textarea
