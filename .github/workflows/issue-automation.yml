@@ -168,12 +168,14 @@ jobs:
             const body = context.payload.issue.body || '';
 
             const pageMap = [
-              { keyword: '主頁(Live View)',    label: 'page: live-view' },
-              { keyword: '回放頁(Playback)',   label: 'page: playback'  },
-              { keyword: '控制頁(Control)',    label: 'page: control'   },
-              { keyword: '事件頁(Events)',     label: 'page: events'    },
-              { keyword: '狀態頁(Status)',     label: 'page: status'    },
-              { keyword: '設定頁(Settings)',   label: 'page: settings'  },
+              { keyword: '登入頁(Login)',          label: 'page: login'      },
+              { keyword: '主頁(Home)',              label: 'page: home'       },
+              { keyword: '回放頁(Playback)',        label: 'page: playback'   },
+              { keyword: '控制頁(Control)',         label: 'page: control'    },
+              { keyword: '事件頁(Events)',          label: 'page: events'     },
+              { keyword: '狀態頁(Status)',          label: 'page: status'     },
+              { keyword: '設定頁(Settings)',        label: 'page: settings'   },
+              { keyword: '新增設備頁(Add Device)',  label: 'page: add-device' },
             ];
 
             const toAdd = [];
