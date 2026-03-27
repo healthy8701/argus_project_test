@@ -101,19 +101,19 @@ jobs:
             const projectId = 'PVT_kwDOCKYu6s4Am5Ly';
             const priorityFieldId = 'PVTSSF_lADOCKYu6s4Am5LyzgeycZY';
             const itemId = process.env.PROJECT_ITEM_ID;
-            const labels = context.payload.issue.labels.map(l => l.name);
+            const body = context.payload.issue.body || '';
 
-            const priorityMap = {
-              'priority: critical': 'Critical',
-              'priority: high':     'High',
-              'priority: medium':   'Medium',
-              'priority: low':      'Low',
-            };
+            const priorityMap = [
+              { keyword: '緊急（系統無法使用）',       project: 'Critical' },
+              { keyword: '高（影響核心使用流程）',     project: 'High'     },
+              { keyword: '中（影響部分功能或體驗）',   project: 'Medium'   },
+              { keyword: '低（輕微瑕疵或未來再處理）', project: 'Low'      },
+            ];
 
             let targetPriority = 'Medium'; // 預設
-            for (const [label, priority] of Object.entries(priorityMap)) {
-              if (labels.includes(label)) {
-                targetPriority = priority;
+            for (const { keyword, project } of priorityMap) {
+              if (body.includes(keyword)) {
+                targetPriority = project;
                 break;
               }
             }
@@ -213,11 +213,10 @@ jobs:
             if (labels.some(l => l.startsWith('priority:'))) return;
 
             const priorityMap = [
-              { keyword: '高（影響核心使用流程）', label: 'priority: high'   },
-              { keyword: '中（影響部分功能）',     label: 'priority: medium' },
-              { keyword: '中（提升使用體驗）',     label: 'priority: medium' },
-              { keyword: '低（視覺或體驗瑕疵）',   label: 'priority: low'   },
-              { keyword: '低（非必要，未來可考慮）', label: 'priority: low'  },
+              { keyword: '緊急（系統無法使用）',       label: 'priority: critical' },
+              { keyword: '高（影響核心使用流程）',     label: 'priority: high'     },
+              { keyword: '中（影響部分功能或體驗）',   label: 'priority: medium'   },
+              { keyword: '低（輕微瑕疵或未來再處理）', label: 'priority: low'      },
             ];
 
             for (const { keyword, label } of priorityMap) {

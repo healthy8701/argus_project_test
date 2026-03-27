@@ -36,9 +36,10 @@ body:
       label: 🔥 嚴重程度
       description: 此 BUG 對使用者的影響程度
       options:
+        - 緊急（系統無法使用）
         - 高（影響核心使用流程）
-        - 中（影響部分功能）
-        - 低（視覺或體驗瑕疵）
+        - 中（影響部分功能或體驗）
+        - 低（輕微瑕疵或未來再處理）
     validations:
       required: true
 
