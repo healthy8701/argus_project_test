@@ -43,12 +43,12 @@ body:
       description: 請選擇此功能涉及的頁面
       options:
         - 登入頁
-        - 主頁（Live View）
-        - 回放頁（Playback）
-        - 控制頁（Control）
-        - 事件頁（Events）
-        - 狀態頁（Status）
-        - 設定頁（Settings）
+        - 主頁(Live View)
+        - 回放頁(Playback)
+        - 控制頁(Control)
+        - 事件頁(Events)
+        - 狀態頁(Status)
+        - 設定頁(Settings)
         - 跨頁面 / 全域
         - 其他（請在備註補充）
     validations:
