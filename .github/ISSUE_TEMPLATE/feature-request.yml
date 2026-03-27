@@ -43,7 +43,7 @@ body:
       description: 請選擇此功能涉及的頁面
       options:
         - 登入頁
-        - 即時監控頁（Live View）
+        - 主頁（Live View）
         - 回放頁（Playback）
         - 控制頁（Control）
         - 事件頁（Events）
@@ -62,7 +62,7 @@ body:
       options:
         - 高（影響核心使用流程）
         - 中（提升使用體驗）
-        - 低（Nice to have）
+        - 低（非必要，未來可考慮）
     validations:
       required: true
 

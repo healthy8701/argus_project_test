@@ -15,7 +15,7 @@ Closes #
 <!-- 勾選所有受影響的頁面 -->
 
 - [ ] 登入頁
-- [ ] 即時監控頁（Live View）
+- [ ] 主頁（Live View）
 - [ ] 回放頁（Playback）
 - [ ] 控制頁（Control）
 - [ ] 事件頁（Events）

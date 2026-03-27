@@ -79,7 +79,7 @@ create_label "layer: core"         "f9d0c4" "Core 層（共用工具 / 設定）
 echo ""
 
 echo "Step 6：建立 page: 系列 label"
-create_label "page: live-view" "e6b8a2" "即時監控頁"
+create_label "page: live-view" "e6b8a2" "主頁"
 create_label "page: playback"  "e6b8a2" "回放頁"
 create_label "page: control"   "e6b8a2" "控制頁"
 create_label "page: events"    "e6b8a2" "事件頁"

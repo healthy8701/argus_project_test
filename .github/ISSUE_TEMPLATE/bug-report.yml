@@ -1,5 +1,5 @@
-name: 測試人員 BUG 回報
-description: 提供給 測試人員用來回報 Flutter App 錯誤
+name: BUG 回報
+description: 回報 App 發生的錯誤或異常行為
 title: "[BUG] "
 labels: [bug]
 assignees: []
@@ -20,7 +20,7 @@ body:
       description: 請選擇發生錯誤的 App 頁面
       options:
         - 登入頁
-        - 即時監控頁（Live View）
+        - 主頁（Live View）
         - 回放頁（Playback）
         - 控制頁（Control）
         - 事件頁（Events）
