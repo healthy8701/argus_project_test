@@ -24,15 +24,15 @@ jobs:
             core.setOutput('labels', JSON.stringify(labels));
 
       # ──────────────────────────────────────────
-      # Step 1：加入 Project 5 並設定 Status = Backlog
+      # Step 1：加入 Project 2 並設定 Status = Backlog
       # ──────────────────────────────────────────
-      - name: 加入 Project 5 並設定 Status
+      - name: 加入 Project 2 並設定 Status
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.PROJECT_TOKEN }}
           script: |
-            const projectId = 'PVT_kwDOCKYu6s4Am5Ly';
-            const statusFieldId = 'PVTSSF_lADOCKYu6s4Am5LyzgeuD0g';
+            const projectId = 'PVT_kwHOAPpeac4BS8b_';
+            const statusFieldId = 'PVTSSF_lAHOAPpeac4BS8b_zhAVLow';
             const issueNodeId = context.payload.issue.node_id;
 
             // 加入 Project
@@ -98,8 +98,8 @@ jobs:
         with:
           github-token: ${{ secrets.PROJECT_TOKEN }}
           script: |
-            const projectId = 'PVT_kwDOCKYu6s4Am5Ly';
-            const priorityFieldId = 'PVTSSF_lADOCKYu6s4Am5LyzgeycZY';
+            const projectId = 'PVT_kwHOAPpeac4BS8b_';
+            const priorityFieldId = 'PVTSSF_lAHOAPpeac4BS8b_zhAVLxU';
             const itemId = process.env.PROJECT_ITEM_ID;
             const body = context.payload.issue.body || '';
 
