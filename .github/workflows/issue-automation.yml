@@ -1,0 +1,230 @@
+name: Issue 自動化
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  automate:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      repository-projects: write
+
+    steps:
+      - name: 取得 Issue 資訊
+        id: issue
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PROJECT_TOKEN }}
+          script: |
+            const body = context.payload.issue.body || '';
+            const labels = context.payload.issue.labels.map(l => l.name);
+            core.setOutput('body', body);
+            core.setOutput('labels', JSON.stringify(labels));
+
+      # ──────────────────────────────────────────
+      # Step 1：加入 Project 2 並設定 Status = Backlog
+      # ──────────────────────────────────────────
+      - name: 加入 Project 2 並設定 Status
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PROJECT_TOKEN }}
+          script: |
+            const projectId = 'PVT_kwHOAPpeac4BS8b_';
+            const statusFieldId = 'PVTSSF_lAHOAPpeac4BS8b_zhAVLow';
+            const issueNodeId = context.payload.issue.node_id;
+
+            // 加入 Project
+            const addResult = await github.graphql(`
+              mutation {
+                addProjectV2ItemById(input: {
+                  projectId: "${projectId}"
+                  contentId: "${issueNodeId}"
+                }) {
+                  item { id }
+                }
+              }
+            `);
+            const itemId = addResult.addProjectV2ItemById.item.id;
+
+            // 取得 Status 欄位的 Backlog option ID
+            const project = await github.graphql(`
+              {
+                node(id: "${projectId}") {
+                  ... on ProjectV2 {
+                    fields(first: 20) {
+                      nodes {
+                        ... on ProjectV2SingleSelectField {
+                          id
+                          name
+                          options { id name }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            `);
+
+            const fields = project.node.fields.nodes;
+            const statusField = fields.find(f => f.name === 'Status');
+            const backlogOption = statusField?.options.find(o => o.name === 'Backlog');
+
+            if (backlogOption) {
+              await github.graphql(`
+                mutation {
+                  updateProjectV2ItemFieldValue(input: {
+                    projectId: "${projectId}"
+                    itemId: "${itemId}"
+                    fieldId: "${statusFieldId}"
+                    value: { singleSelectOptionId: "${backlogOption.id}" }
+                  }) {
+                    projectV2Item { id }
+                  }
+                }
+              `);
+              console.log('Status 設定為 Backlog');
+            }
+
+            // 儲存 itemId 供後續步驟使用
+            core.exportVariable('PROJECT_ITEM_ID', itemId);
+
+      # ──────────────────────────────────────────
+      # Step 2：根據 priority: label 設定 Project Priority
+      # ──────────────────────────────────────────
+      - name: 設定 Project Priority
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PROJECT_TOKEN }}
+          script: |
+            const projectId = 'PVT_kwHOAPpeac4BS8b_';
+            const priorityFieldId = 'PVTSSF_lAHOAPpeac4BS8b_zhAVLxU';
+            const itemId = process.env.PROJECT_ITEM_ID;
+            const labels = JSON.parse('${{ steps.issue.outputs.labels }}');
+
+            const priorityMap = {
+              'priority: critical': 'Critical',
+              'priority: high':     'High',
+              'priority: medium':   'Medium',
+              'priority: low':      'Low',
+            };
+
+            let targetPriority = 'Medium'; // 預設
+            for (const [label, priority] of Object.entries(priorityMap)) {
+              if (labels.includes(label)) {
+                targetPriority = priority;
+                break;
+              }
+            }
+
+            // 取得 Priority 欄位的 option ID
+            const project = await github.graphql(`
+              {
+                node(id: "${projectId}") {
+                  ... on ProjectV2 {
+                    fields(first: 20) {
+                      nodes {
+                        ... on ProjectV2SingleSelectField {
+                          id
+                          name
+                          options { id name }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            `);
+
+            const fields = project.node.fields.nodes;
+            const priorityField = fields.find(f => f.name === 'Priority');
+            const option = priorityField?.options.find(o => o.name === targetPriority);
+
+            if (option) {
+              await github.graphql(`
+                mutation {
+                  updateProjectV2ItemFieldValue(input: {
+                    projectId: "${projectId}"
+                    itemId: "${itemId}"
+                    fieldId: "${priorityFieldId}"
+                    value: { singleSelectOptionId: "${option.id}" }
+                  }) {
+                    projectV2Item { id }
+                  }
+                }
+              `);
+              console.log(`Priority 設定為 ${targetPriority}`);
+            }
+
+      # ──────────────────────────────────────────
+      # Step 3：根據 body 內容自動貼 page: label
+      # ──────────────────────────────────────────
+      - name: 自動貼 page label
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const body = `${{ steps.issue.outputs.body }}`;
+
+            const pageMap = [
+              { keyword: '主頁（Live View）',     label: 'page: live-view' },
+              { keyword: '回放頁（Playback）',     label: 'page: playback'  },
+              { keyword: '控制頁（Control）',      label: 'page: control'   },
+              { keyword: '事件頁（Events）',       label: 'page: events'    },
+              { keyword: '狀態頁（Status）',       label: 'page: status'    },
+              { keyword: '設定頁（Settings）',     label: 'page: settings'  },
+            ];
+
+            const toAdd = [];
+            for (const { keyword, label } of pageMap) {
+              if (body.includes(keyword)) {
+                toAdd.push(label);
+              }
+            }
+
+            if (toAdd.length > 0) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                labels: toAdd,
+              });
+              console.log(`貼上 label：${toAdd.join(', ')}`);
+            }
+
+      # ──────────────────────────────────────────
+      # Step 4：根據 feature-request 的優先程度選單自動貼 priority: label
+      # ──────────────────────────────────────────
+      - name: 自動貼 priority label（來自 feature-request 選單）
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const body = `${{ steps.issue.outputs.body }}`;
+            const labels = JSON.parse('${{ steps.issue.outputs.labels }}');
+
+            // 只有 feature-request 才有優先程度選單
+            if (!labels.includes('type: feature')) return;
+
+            // 已有 priority label 則跳過
+            if (labels.some(l => l.startsWith('priority:'))) return;
+
+            const priorityMap = [
+              { keyword: '高（影響核心使用流程）', label: 'priority: high'   },
+              { keyword: '中（提升使用體驗）',     label: 'priority: medium' },
+              { keyword: '低（非必要，未來可考慮）', label: 'priority: low'  },
+            ];
+
+            for (const { keyword, label } of priorityMap) {
+              if (body.includes(keyword)) {
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.issue.number,
+                  labels: [label],
+                });
+                console.log(`貼上 label：${label}`);
+                break;
+              }
+            }
