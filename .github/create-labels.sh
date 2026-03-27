@@ -65,20 +65,7 @@ create_label "priority: medium"   "f97316" "中優先"
 create_label "priority: low"      "fde68a" "低優先，有空再處理"
 echo ""
 
-echo "Step 4：建立 status: 系列 label"
-create_label "status: in-progress"  "1d76db" "進行中"
-create_label "status: blocked"      "b60205" "被阻塞，等待外部因素"
-create_label "status: needs-review" "0e8a16" "等待 Code Review"
-echo ""
-
-echo "Step 5：建立 layer: 系列 label"
-create_label "layer: presentation" "c2e0c6" "Presentation 層（UI / BLoC）"
-create_label "layer: domain"       "bfd4f2" "Domain 層（Service / UseCase）"
-create_label "layer: data"         "d4c5f9" "Data 層（Repository / Model）"
-create_label "layer: core"         "f9d0c4" "Core 層（共用工具 / 設定）"
-echo ""
-
-echo "Step 6：建立 page: 系列 label"
+echo "Step 4：建立 page: 系列 label"
 create_label "page: login"      "e6b8a2" "登入頁"
 create_label "page: home"       "e6b8a2" "主頁"
 create_label "page: playback"   "e6b8a2" "回放頁"
@@ -90,7 +77,7 @@ create_label "page: add-device" "e6b8a2" "新增設備頁"
 echo ""
 
 # ──────────────────────────────────────────
-# Step 7：刪除已被取代的舊 label
+# Step 5：刪除已被取代的舊 label
 # ──────────────────────────────────────────
 delete_label() {
   local name="$1"
@@ -102,7 +89,7 @@ delete_label() {
   fi
 }
 
-echo "Step 7：刪除已被取代的舊 label"
+echo "Step 5：刪除已被取代的舊 label"
 delete_label "bug"
 delete_label "enhancement"
 delete_label "documentation"

@@ -46,14 +46,84 @@ bash .github/create-labels.sh
 
 ---
 
-## 3. GitHub Project
+## 3. 建立新 Project「Argus (New)」
 
-目前使用：[Project 2「argus_test」](https://github.com/users/healthy8701/projects/2)
-
-已設定完成，Status / Priority 欄位皆已建立。如需重建或查詢 ID：
+### Step 1：建立 Project
 
 ```bash
-gh api graphql -f query='{ user(login: "healthy8701") { projectsV2(first: 10) { nodes { id number title fields(first: 20) { nodes { ... on ProjectV2SingleSelectField { id name options { id name } } } } } } } }'
+gh project create --owner Delos-Matrix --title "Argus (New)"
+```
+
+記下輸出的 Project 編號（例如 `6`），後續步驟會用到。
+
+### Step 2：建立 Status 欄位
+
+```bash
+gh project field-create <PROJECT_NUMBER> \
+  --owner Delos-Matrix \
+  --name "Status" \
+  --data-type "SINGLE_SELECT" \
+  --single-select-options "Backlog,In Progress,In Review,Blocked,Done"
+```
+
+### Step 3：建立 Priority 欄位
+
+```bash
+gh project field-create <PROJECT_NUMBER> \
+  --owner Delos-Matrix \
+  --name "Priority" \
+  --data-type "SINGLE_SELECT" \
+  --single-select-options "Critical,High,Medium,Low"
+```
+
+### Step 4：更新 Workflow 的 Project ID
+
+建立完成後，執行以下指令取得新 Project 的 Node ID：
+
+```bash
+gh project list --owner Delos-Matrix --format json \
+  | jq '.projects[] | select(.title == "Argus (New)") | {number, id}'
+```
+
+將輸出的 `id` 更新到 `.github/workflows/issue-automation.yml` 的以下位置：
+
+```yaml
+const projectId = 'PVT_xxxx';  # 改為新 Project 的 ID
+```
+
+同時更新 Status 和 Priority 的 field ID（用以下指令查詢）：
+
+```bash
+gh api graphql -f query='
+{
+  node(id: "<NEW_PROJECT_ID>") {
+    ... on ProjectV2 {
+      fields(first: 20) {
+        nodes {
+          ... on ProjectV2SingleSelectField {
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+}'
+```
+
+### Step 5：封存舊 Project 5
+
+確認新 Project 運作正常後，封存舊的 Project 5：
+
+1. 前往 [Project 5](https://github.com/orgs/Delos-Matrix/projects/5)
+2. 點右上角 `...` → **Close project**
+
+### Step 6：改名新 Project
+
+封存完成後，將「Argus (New)」改名為「Argus」：
+
+```bash
+gh project edit <PROJECT_NUMBER> --owner Delos-Matrix --title "Argus"
 ```
 
 ---
@@ -63,7 +133,7 @@ gh api graphql -f query='{ user(login: "healthy8701") { projectsV2(first: 10) { 
 每次規劃新版本時執行：
 
 ```bash
-gh api repos/healthy8701/argus_project_test/milestones \
+gh api repos/Delos-Matrix/Argus/milestones \
   --method POST \
   -f title="v1.1.0" \
   -f description="版本說明" \
@@ -81,8 +151,8 @@ gh api repos/healthy8701/argus_project_test/milestones \
 
 ```
 1. 建立 Issue（選擇對應模板）
-   └─ Actions 自動：加入 Project、Status = Backlog、貼 page label
-   └─ 手動：指定 Milestone、設定 Priority（若 feature-request 已自動貼 priority label 則跳過）
+   └─ Actions 自動：加入 Project、Status = Backlog、貼 page label、貼 priority label（bug / feature）
+   └─ 手動：指定 Milestone
 
 2. 開始開發
    └─ 在 Project 將 Status 改為 In Progress
