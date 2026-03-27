@@ -1,0 +1,74 @@
+name: 技術債
+description: 記錄需要改善的技術負債，例如架構違規、重複程式碼、過時 API
+title: "[TECH DEBT] "
+labels: ["type: tech-debt"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: 🏚️ 問題描述
+      description: 簡要說明這個技術債的位置和性質
+      placeholder: 例如：PlaybackBloc 直接呼叫 Repository，違反 Clean Architecture 依賴規則
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-problem
+    attributes:
+      label: ⚠️ 目前造成的問題
+      description: 說明這個技術債實際帶來了哪些困擾
+      placeholder: |
+        - 難以替換資料來源
+        - 單元測試無法獨立測試 BLoC
+        - 新人容易誤以為這是正確的模式
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: 💡 建議的改善方向
+      description: 你認為應該怎麼修正
+      placeholder: 例如：新增 PlaybackService 抽象介面，透過 GetIt 注入，解除 Bloc 對 Repository 的直接依賴
+    validations:
+      required: true
+
+  - type: dropdown
+    id: layer
+    attributes:
+      label: 🏗️ 影響層級
+      description: 這個技術債主要在哪一層
+      options:
+        - Presentation 層（UI / BLoC）
+        - Domain 層（Service / UseCase）
+        - Data 層（Repository / Model）
+        - Core 層（共用工具 / 設定）
+        - 跨層（多層皆受影響）
+    validations:
+      required: true
+
+  - type: dropdown
+    id: risk
+    attributes:
+      label: 🎯 修改風險評估
+      description: 修正這個技術債的風險程度
+      options:
+        - 低（修改範圍小，影響有限）
+        - 中（需要跨多個檔案修改）
+        - 高（牽涉核心邏輯，需完整測試）
+    validations:
+      required: true
+
+  - type: textarea
+    id: note
+    attributes:
+      label: 📌 補充說明（可選）
+      placeholder: 例如：此問題在 PR #123 被發現，當時因時間緊迫先跳過
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: ✅ 提交前確認
+      options:
+        - label: 已確認此為架構或程式碼問題，非 Bug 也非 Feature
+        - label: 已提供足夠資訊讓接手者理解問題背景

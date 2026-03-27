@@ -1,0 +1,101 @@
+name: 測試人員 BUG 回報
+description: 提供給 測試人員用來回報 Flutter App 錯誤
+title: "[BUG] "
+labels: [bug]
+assignees: []
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: 🐞 問題描述
+      description: 簡要說明遇到的問題
+      placeholder: 例如：點擊播放後畫面無反應
+    validations:
+      required: true
+
+  - type: dropdown
+    id: screen
+    attributes:
+      label: 🧭 發生問題的頁面
+      description: 請選擇發生錯誤的 App 頁面
+      options:
+        - 登入頁
+        - 即時監控頁（Live View）
+        - 回放頁（Playback）
+        - 控制頁（Control）
+        - 事件頁（Events）
+        - 狀態頁（Status）
+        - 設定頁（Settings）
+        - 其他（請在備註補充）
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 🔁 重現步驟
+      description: 操作流程，請一步一步列出
+      placeholder: |
+        1. 開啟 App
+        2. 點選「播放」
+        3. 畫面卡住
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: ✅ 預期結果
+      placeholder: 例如：應該要成功播放影片
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: ❌ 實際結果
+      placeholder: 實際看到的錯誤或異常行為
+
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: 📸 截圖或影片（可選）
+      description: 拖曳圖片或影片到這裡上傳
+
+  - type: input
+    id: device
+    attributes:
+      label: 📱 測試設備型號
+      placeholder: 例如：iPhone 13 / Pixel 6 / 模擬器
+
+  - type: input
+    id: os
+    attributes:
+      label: 系統版本
+      placeholder: iOS 17.5 / Android 14
+
+  - type: input
+    id: app-version
+    attributes:
+      label: App 版本號
+      placeholder: v1.0.0-alpha+7
+
+  - type: textarea
+    id: log
+    attributes:
+      label: 🧾 Crash Log / flutter run log（可選）
+      description: 若有錯誤訊息請貼上
+      render: shell
+
+  - type: textarea
+    id: note
+    attributes:
+      label: 📌 補充說明（可選）
+      placeholder: 例如：剛剛更新完 App 就發生了
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: ✅ 提交前確認
+      options:
+        - label: 已確認此問題可以穩定重現
+        - label: 已附上截圖或 log（如有）
+        - label: 問題與測試資料無關

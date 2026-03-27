@@ -1,0 +1,63 @@
+name: 開發任務
+description: 記錄非 Bug 也非 Feature 的開發工作，例如重構、效能優化、CI/CD、文件
+title: "[TASK] "
+labels: ["type: task"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: 📋 任務描述
+      description: 說明這個任務要做什麼
+      placeholder: 例如：將 HomeBloc 的 Repository 依賴改為透過 Service 抽象層注入
+    validations:
+      required: true
+
+  - type: dropdown
+    id: task-type
+    attributes:
+      label: 🔧 任務類型
+      description: 請選擇最符合的任務類別
+      options:
+        - 重構（Refactor）
+        - 效能優化（Performance）
+        - CI/CD
+        - 文件（Documentation）
+        - 依賴套件更新（Dependencies）
+        - 其他（請在補充說明描述）
+    validations:
+      required: true
+
+  - type: textarea
+    id: done-criteria
+    attributes:
+      label: ✅ 完成條件
+      description: 列出判斷此任務完成的標準
+      placeholder: |
+        - [ ] HomeBloc 不再直接依賴 Repository
+        - [ ] flutter analyze 無新增警告
+        - [ ] 現有測試全部通過
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: 📂 影響範圍（可選）
+      description: 列出預計會修改的檔案或模組
+      placeholder: |
+        - lib/presentation/home/bloc/home_bloc.dart
+        - lib/domain/home/api/home_service.dart
+
+  - type: textarea
+    id: note
+    attributes:
+      label: 📌 補充說明（可選）
+      placeholder: 例如：此任務是為了解決 #123 issue 的根本原因
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: ✅ 提交前確認
+      options:
+        - label: 已確認此任務有明確的完成條件
+        - label: 已評估影響範圍

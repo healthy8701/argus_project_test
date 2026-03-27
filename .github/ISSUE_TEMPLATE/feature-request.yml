@@ -1,0 +1,81 @@
+name: 功能需求
+description: 提出新功能或改善現有功能的建議
+title: "[FEATURE] "
+labels: ["type: feature"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: 🚀 功能描述
+      description: 簡要說明你希望新增或改善的功能
+      placeholder: 例如：在回放頁加入倍速播放按鈕
+    validations:
+      required: true
+
+  - type: textarea
+    id: user-story
+    attributes:
+      label: 👤 使用情境 / 用戶故事
+      description: 描述使用者在什麼情境下會需要這個功能
+      placeholder: |
+        身為一位 ___，
+        我希望能夠 ___，
+        以便 ___。
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: ✅ 驗收條件
+      description: 列出此功能完成的判斷標準
+      placeholder: |
+        - [ ] 使用者可以選擇 1x / 1.5x / 2x 倍速
+        - [ ] 倍速設定在切換影片後保持不變
+        - [ ] UI 有明確的倍速指示
+    validations:
+      required: true
+
+  - type: dropdown
+    id: screen
+    attributes:
+      label: 📱 影響頁面
+      description: 請選擇此功能涉及的頁面
+      options:
+        - 登入頁
+        - 即時監控頁（Live View）
+        - 回放頁（Playback）
+        - 控制頁（Control）
+        - 事件頁（Events）
+        - 狀態頁（Status）
+        - 設定頁（Settings）
+        - 跨頁面 / 全域
+        - 其他（請在備註補充）
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 🔥 優先程度建議
+      description: 你認為這個功能的重要程度
+      options:
+        - 高（影響核心使用流程）
+        - 中（提升使用體驗）
+        - 低（Nice to have）
+    validations:
+      required: true
+
+  - type: textarea
+    id: note
+    attributes:
+      label: 📌 補充說明（可選）
+      placeholder: 例如：參考截圖、競品做法、相關設計稿連結
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: ✅ 提交前確認
+      options:
+        - label: 已確認此功能目前不存在
+        - label: 已描述清楚使用情境與驗收條件
