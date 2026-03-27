@@ -101,7 +101,7 @@ jobs:
             const projectId = 'PVT_kwHOAPpeac4BS8b_';
             const priorityFieldId = 'PVTSSF_lAHOAPpeac4BS8b_zhAVLxU';
             const itemId = process.env.PROJECT_ITEM_ID;
-            const labels = JSON.parse('${{ steps.issue.outputs.labels }}');
+            const labels = context.payload.issue.labels.map(l => l.name);
 
             const priorityMap = {
               'priority: critical': 'Critical',
@@ -165,7 +165,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const body = `${{ steps.issue.outputs.body }}`;
+            const body = context.payload.issue.body || '';
 
             const pageMap = [
               { keyword: '主頁（Live View）',     label: 'page: live-view' },
@@ -201,8 +201,8 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const body = `${{ steps.issue.outputs.body }}`;
-            const labels = JSON.parse('${{ steps.issue.outputs.labels }}');
+            const body = context.payload.issue.body || '';
+            const labels = context.payload.issue.labels.map(l => l.name);
 
             // 只有 feature-request 才有優先程度選單
             if (!labels.includes('type: feature')) return;
